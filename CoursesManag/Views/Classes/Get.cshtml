@@ -1,0 +1,92 @@
+﻿@model IEnumerable<CoursesManag.Models.Classes>
+
+@{
+    ViewData["Title"] = "Get";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Get</h1>
+
+<p>
+    <a asp-action="AddClass">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th hidden>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassesName)
+            </th>
+            <th>
+                CourseName
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SessionStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SessionEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SessionsEachWeek)
+            </th>
+            <th>
+                TeacherName
+            </th>
+            <th>
+                StudentName
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    var teacherIdFake = String.Join(", ", item.TeacherID);
+    var studentIdFake = String.Join(", ", item.StudentID);
+        <tr>
+            <td hidden>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClassesName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateStart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SessionStart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SessionEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SessionsEachWeek)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => teacherIdFake)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => studentIdFake)
+            </td>
+            <td>
+                <a asp-action="UpdateClass" asp-route-id="@item.Id">Update</a> |
+                <a asp-action="ClassDetail" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="DeleteClass" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

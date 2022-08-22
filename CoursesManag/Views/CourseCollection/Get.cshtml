@@ -1,0 +1,56 @@
+﻿@model IEnumerable<CoursesManag.Models.CourseCollection>
+
+@{
+    ViewData["Title"] = "Get";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Get</h1>
+
+<p>
+    <a asp-action="AddCourse">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoursePrice)
+            </th>
+            <th>
+                Teacher Name
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var teacherIdFake = String.Join(", ", item.TeacherID);
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CoursePrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => teacherIdFake)
+                </td>
+                <td>
+                    <a asp-action="UpdateCourse" asp-route-id="@item.Id">Update</a> |
+                    <a asp-action="CourseDetail" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="DeleteCourse" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

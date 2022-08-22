@@ -1,0 +1,88 @@
+﻿@model IEnumerable<CoursesManag.Models.Classes>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<table id="example" class="ui celled table" style="width:100%">
+    <thead id="headingg">
+        <tr>
+            <th>
+                ClassesName
+            </th>
+            <th>
+                CourseID
+            </th>
+            <th>
+                DateStart
+            </th>
+            <th>
+                DateEnd
+            </th>
+            <th>
+                SessionStart
+            </th>
+            <th>
+                SessionEnd
+            </th>
+        </tr>
+    </thead>
+</table>
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "filter": true,
+            "ajax": {
+                "url": "/datatable/GetList",
+                "type": "POST",
+                "contentType": "application/json",
+                "dataType": "json",
+                "data": function (d) {
+                    return JSON.stringify(d);
+                }
+            },
+            "language": {
+                "search": "Tìm kiếm:",
+                "lengthMenu": "Hiển thị _MENU_ số lượng lớp học",
+                "info": "Đang hiển thị _START_ đến _END_ trong tổng số _TOTAL_ lớp học",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Sau",
+                    "previous": "Trước"
+                }
+            },
+
+            "columnDefs": [{
+                "targets": [0],
+                "visible": false,
+                "searchable": false
+            }],
+            "columns": [
+                { "data": "classesName", "name": "ClassesName", "autoWidth": true },
+                { "data": "courseID", "name": "CourseID", "autoWidth": true },
+                { "data": "dateStart", "name": "DateStart", "autoWidth": true },
+                { "data": "dateEnd", "name": "DateEnd", "autoWidth": true},
+                { "data": "sessionStart", "name": "SessionStart", "autoWidth": true},
+                { "data": "sessionEnd", "name": "SessionEnd", "autoWidth": true},
+            ],
+            "lengthMenu": [[5, 10, 50, -1], [5, 10, 50, "All"]]
+        });
+    });
+
+    
+</script>
+
+<style>
+    #example{
+        border-top:1px solid;
+        border-left: 1px solid;
+        border-bottom: none;
+    }
+    .sorting{
+        color: white !important;
+        background-color: blue !important;
+    }
+</style>

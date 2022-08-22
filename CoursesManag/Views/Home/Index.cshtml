@@ -1,0 +1,432 @@
+﻿@model IEnumerable<CoursesManag.Models.Classes>
+
+
+@{
+    ViewData["Title"] = "Home Page";
+    var classeee = ViewBag.classname;
+    var teacheee = ViewBag.teachername;
+}
+
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>
+    <input class="btn btn-primary" type="button" value="Refresh" onclick="notmyFunction()" />
+    <button class="btn btn-primary" onclick="javascript: fnExcelReport('dataTable', 'data')">Export To Excel</button>
+    <form asp-controller="Home" asp-action="Index" method="get">
+        <div class="form-group">
+            <label class="control-label">Fast Search</label>
+            <input class="form-control" id="fastsearch" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">TeacherSearch</label>
+            <select class="js-select2" id="teachersearch">
+                <option disabled selected></option>
+                @foreach (var a in teacheee)
+                {
+                    <option value="@a.Name">@a.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">ClassesSearch</label>
+            <select class="js-select2" id="classsearch">
+                <option disabled selected></option>
+                @foreach (var a in classeee)
+                {
+                    <option value="@a.ClassesName">@a.ClassesName</option>
+                }
+            </select>
+        </div>
+        <input type="button" value="Filter" onclick="myFunction()" />
+    </form>
+    <table class="table" id="dataTable">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().ClassesName)
+                </th>
+                <th>
+                    CourseName
+                </th>
+                <th>
+                    TeacherName
+                </th>
+                <th>
+                    StudentName
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().DateStart)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().DateEnd)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().SessionStart)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().SessionEnd)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().SessionsEachWeek)
+                </th>
+                <th hidden></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var teacherIdFake = String.Join(", ", item.TeacherID);
+                var studentIdFake = String.Join(", ", item.StudentID);
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClassesName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourseID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => teacherIdFake)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => studentIdFake)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateStart)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateEnd)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SessionStart)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SessionEnd)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SessionsEachWeek)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <ul class="pagination">
+        @{
+            int numberPage = ViewBag.numberPage;
+            int pageCurrent = ViewBag.Current;
+            int i;
+            for (i = 1; i <= numberPage; i++)
+            {
+                if (i == pageCurrent)
+                {
+                    <li class="active"><a href="?page=@i">@i</a></li>
+                }
+                else
+                {
+                    <li><a href="?page=@i">@i</a></li>
+                }
+            }
+
+        }
+    </ul>*@
+
+<div id="butt">
+    <input class="btn btn-primary" type="button" value="Refresh" onclick="notmyFunction()" />
+    <button class="btn btn-primary" onclick="javascript: fnExcelReport('example', 'data')">Export To Excel</button>
+</div>
+
+<div class="form-group">
+    <label class="control-label">TeacherSearch</label>
+    <select class="js-select2 zoz" id="teachersearch">
+        <option disabled selected></option>
+        @foreach (var a in teacheee)
+        {
+            <option value="@a.Name">@a.Name</option>
+        }
+    </select>
+</div>
+<div class="form-group">
+    <label class="control-label">ClassesSearch</label>
+    <select class="js-select2" id="classsearch">
+        <option disabled selected></option>
+        @foreach (var a in classeee)
+        {
+            <option value="@a.ClassesName">@a.ClassesName</option>
+        }
+    </select>
+</div>
+
+
+<table id="example" class="ui celled table" style="width:100%">
+    <thead id="headingg">
+        <tr>
+            <th>
+                ClassesName
+            </th>
+            <th>
+                CourseName
+            </th>
+            <th>
+                TeacherName
+            </th>
+            <th>
+                StudentName
+            </th>
+            <th>
+                DateStart
+            </th>
+            <th>
+                DateEnd
+            </th>
+            <th>
+                SessionStart
+            </th>
+            <th>
+                SessionEnd
+            </th>
+            <th>
+                SessionsEachWeek
+            </th>
+        </tr>
+    </thead>
+</table>
+<script>
+    var tablee;
+    $(document).ready(function () {
+        tablee = $('#example').DataTable({
+            "responsive": true,
+            "processing": true,
+            "serverSide": true,
+            "filter": true,
+            //"search": {
+            //    return: true,
+            //},
+            "ajax": {
+                "url": "/Home/GetList",
+                "type": "POST",
+                "contentType": "application/json",
+                "dataType": "json",
+                "data": function (d) {
+                    d.teachersearch = $("#teachersearch").val() ? $("#teachersearch").val() : null;
+                    d.classsearch = $("#classsearch").val() ? $("#classsearch").val() : null;
+                    return JSON.stringify(d);
+                }
+            },
+            "language": {
+                "search": "Tìm kiếm:",
+                "lengthMenu": "Hiển thị _MENU_ số lượng lớp học",
+                "info": "Đang hiển thị _START_ đến _END_ trong tổng số _TOTAL_ lớp học",
+                "paginate": {
+                    "first": "Đầu",
+                    "last": "Cuối",
+                    "next": "Sau",
+                    "previous": "Trước"
+                }
+            },
+            "columnDefs": [
+                { "width": "20px", "targets": 0 },
+                { "width": "20px", "targets": 1 },
+                { "width": "20px", "targets": 2 },
+                { "width": "20px", "targets": 3 },
+                { "width": "20px", "targets": 4 },
+                { "width": "20px", "targets": 5 },
+                { "width": "20px", "targets": 6 },
+                { "width": "20px", "targets": 7 },
+                { "width": "72px", "targets": 8 },
+            ],
+            "fixedColumns": true,
+            "columns": [
+                { "data": "classesName"},
+                { "data": "courseID" },
+                { "data": "teacherID"},
+                { "data": "studentID" },
+                { "data": "dateStart"},
+                { "data": "dateEnd" },
+                { "data": "sessionStart"},
+                { "data": "sessionEnd" },
+                { "data": "sessionsEachWeek"},
+            ],
+            "lengthMenu": [[5, 10, 50, -1], [5, 10, 50, "All"]]
+        });
+
+    });
+
+    $('#teachersearch').change(function () {
+        tablee.search('').draw();
+    })
+
+    $('#classsearch').change(function () {
+        tablee.search('').draw();
+    })
+</script>
+
+<style>
+    #butt {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    #example {
+        border-top: 1px solid;
+        border-left: 1px solid;
+        border-bottom: none;
+    }
+
+    .sorting {
+        color: white !important;
+        background-color: blue !important;
+    }
+    td {
+        word-wrap:break-word;
+        hyphens:auto;
+    }
+    table {
+        table-layout: fixed;
+    }
+</style>
+
+
+
+
+<script>
+    function myFunction() {
+        var teachh = $('#teachersearch').val()
+        var classss = $('#classsearch').val()
+        var a = location.origin + "/?searchString=" + $("#fastsearch").val() + "&" + "teacherss=" + teachh + "&" + "classsess=" + classss
+        location.href = a;
+    }
+    function notmyFunction() {
+        var a = location.origin
+        location.href = a;
+    }
+    $(".js-select2").select2({
+        closeOnSelect: false,
+        placeholder: "Placeholder",
+        allowHtml: true,
+        allowClear: true,
+        tags: true,
+        templateSelection: function (data, container) {
+            $(data.element).attr('data-custom-attribute', data.customValue);
+            return data.text;
+        }
+    });
+    $('.js-select2').find(':selected').data('custom-attribute');
+</script>
+
+<script src="~/jsfilesaver/FileSaver.js"></script>
+<script>
+    function fnExcelReport(id, name) {
+        var tab_text = '<html xmlns: x="urn:schemas-microsoft-com:office:excel">';
+        tab_text = tab_text + '<head><xml><x: ExcelWorkbook><x: ExcelWorksheets><x: ExcelWorksheet>';
+        tab_text = tab_text + '<x: Name>Test Sheet</x: Name>';
+        tab_text = tab_text + '<x: WorksheetOptions><x: Panes></x: Panes></x: WorksheetOptions ></x: ExcelWorksheet > ';
+        tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+        tab_text = tab_text + "<table border='1px' style='color:black'>";
+
+
+        var exportTable = $('#' + id).clone();
+        exportTable.find('th').last().remove();
+        exportTable.find('input').each(function (index, elem) { $(elem).remove(); });
+        exportTable.find('a').each(function (index, elem) { $(elem).remove(); });
+
+        tab_text = tab_text + exportTable.html();
+        tab_text = tab_text + '</table></body></html>';
+        var fileName = "Demo" + '.xls';
+
+        //Save the file
+        var blob = new Blob([tab_text], { type: "application/vnd.ms-excel;charset=utf-8" })
+        window.saveAs(blob, fileName);
+    }
+</script>
+
+<style>
+    body {
+        font-family: 'Ubuntu', sans-serif;
+        font-weight: bold;
+    }
+
+    .select2-container {
+        min-width: 400px;
+    }
+
+    .select2-results__option {
+        padding-right: 20px;
+        vertical-align: middle;
+    }
+
+        .select2-results__option:before {
+            content: "";
+            display: inline-block;
+            position: relative;
+            height: 20px;
+            width: 20px;
+            border: 2px solid #e9e9e9;
+            border-radius: 4px;
+            background-color: #fff;
+            margin-right: 20px;
+            vertical-align: middle;
+        }
+
+        .select2-results__option[aria-selected=true]:before {
+            font-family: fontAwesome;
+            content: "\f00c";
+            color: #fff;
+            background-color: #f77750;
+            border: 0;
+            display: inline-block;
+            padding-left: 3px;
+        }
+
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: #fff;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #eaeaeb;
+        color: #272727;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+        margin-bottom: 10px;
+    }
+
+    .select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple {
+        border-radius: 4px;
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border-color: #f77750;
+        border-width: 2px;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+        border-width: 2px;
+    }
+
+    .select2-container--open .select2-dropdown--below {
+        border-radius: 6px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .select2-selection .select2-selection--multiple:after {
+        content: 'hhghgh';
+    }
+    /* select with icons badges single*/
+    .select-icon .select2-selection__placeholder .badge {
+        display: none;
+    }
+
+    .select-icon .placeholder {
+        display: none;
+    }
+
+    .select-icon .select2-results__option:before,
+    .select-icon .select2-results__option[aria-selected=true]:before {
+        display: none !important;
+        /* content: "" !important; */
+    }
+
+    .select-icon .select2-search--dropdown {
+        display: none;
+    }
+</style>
